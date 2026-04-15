@@ -1,4 +1,4 @@
-# navarena-server
+# NavArena-Server
 
 Lightweight WebSocket model-server SDK for [NavArena](https://github.com/EI-Nav/NavArena) agent developers.
 
@@ -7,11 +7,11 @@ Implement a navigation agent in Python, expose it as a WebSocket server, and let
 ## Architecture
 
 ```
-┌──────────────────┐  WebSocket (msgpack)  ┌──────────────────┐
-│  NavArena Bench  │ ◄──────────────────►  │  Your Agent      │
-│  (evaluation     │                       │  (model server)  │
-│   driver)        │                       │                  │
-└──────────────────┘                       └──────────────────┘
+          ┌──────────────────┐  WebSocket (msgpack)  ┌──────────────────┐
+          │  NavArena Bench  │ ◄──────────────────►  │  Your Agent      │
+          │  (evaluation     │                       │  (model server)  │
+          │   driver)        │                       │                  │
+          └──────────────────┘                       └──────────────────┘
 ```
 
 The bench acts as the **client**: it connects to your agent's WebSocket server, sends observations, and receives actions. Your agent acts as the **server**: it listens on a port, receives observations, runs inference, and returns actions.
@@ -74,7 +74,7 @@ python my_agent.py
 
 ### 3. Run the NavArena bench
 
-Point the bench at your server (see [NavArena docs](https://github.com/EI-Nav/NavArena) for bench setup):
+Point the bench at your server (see [NavArena docs](https://ei-nav.github.io/NavArena-Doc/getting-started/quickstart) for bench setup):
 
 ```bash
 # In the NavArena bench repo, configure model_server_url to ws://<host>:8000
@@ -111,7 +111,7 @@ class MyAgent(NavigationModelServer):
 Passed as `ctx` to every callback. Provides episode-level metadata:
 
 | Property     | Type   | Description                                              |
-|--------------|--------|----------------------------------------------------------|
+|:------------:|:------:|:--------------------------------------------------------:|
 | `session_id` | `str`  | Unique ID for the WebSocket connection                   |
 | `episode_id` | `str`  | Unique ID for the current episode                        |
 | `step`       | `int`  | Current decision step index (starts at 0)                |
@@ -152,7 +152,7 @@ async def predict(self, observation, ctx):
 ```
 
 | Field | Type    | Description                            |
-|-------|---------|----------------------------------------|
+|:-----:|:-------:|:--------------------------------------:|
 | `x`   | `float` | Forward displacement (meters)          |
 | `y`   | `float` | Lateral displacement (meters)          |
 | `yaw` | `float` | Heading change (radians)               |
@@ -167,7 +167,7 @@ async def predict(self, observation, ctx):
 ```
 
 | Field | Type    | Description                                |
-|-------|---------|--------------------------------------------|
+|:-----:|:-------:|:------------------------------------------:|
 | `v`   | `float` | Linear velocity (m/s)                      |
 | `w`   | `float` | Angular velocity (rad/s)                   |
 | `dt`  | `float` | Duration of the command (seconds)          |
@@ -179,17 +179,17 @@ The `observation` dict passed to `predict` contains sensor data from the simulat
 **Common fields**:
 
 | Field   | Type / Shape             | Description                     |
-|---------|--------------------------|---------------------------------|
-| `rgb`   | `np.ndarray` (H, W, 3)  | RGB camera image (uint8)        |
-| `depth` | `np.ndarray` (H, W)     | Depth map                       |
+|:-------:|:------------------------:|:-------------------------------:|
+| `rgb`   | `np.ndarray` (H, W, 3)   | RGB camera image (uint8)        |
+| `depth` | `np.ndarray` (H, W)      | Depth map                       |
 | `pose`  | `dict`                   | Agent pose (position, rotation) |
 
 **Task-specific fields**:
 
 | Field           | Task Type  | Type / Shape            | Description                              |
-|-----------------|------------|-------------------------|------------------------------------------|
+|:---------------:|:----------:|:-----------------------:|:----------------------------------------:|
 | `goal_category` | ObjectNav  | `str`                   | Target object category (e.g. `"chair"`)  |
-| `goal_image`    | ImageNav   | `np.ndarray` (H, W, 3) | Goal-location image to match             |
+| `goal_image`    | ImageNav   | `np.ndarray` (H, W, 3)  | Goal-location image to match             |
 
 NumPy arrays are automatically serialized/deserialized via msgpack custom codecs. Images (HWC uint8 arrays) are compressed during transport for efficiency.
 
@@ -261,7 +261,7 @@ The default implementations delegate to the single-episode hooks (`on_episode_st
 The `examples/` directory contains complete working agents:
 
 | File                            | Task Type  | Action Space | Description                          |
-|---------------------------------|------------|--------------|--------------------------------------|
+|:-------------------------------:|:----------:|:------------:|:------------------------------------:|
 | `random_waypoint_agent.py`      | PointNav   | Waypoint     | Random relative-pose waypoints       |
 | `random_velocity_agent.py`      | PointNav   | Velocity     | Random unicycle velocity commands     |
 | `objectnav_waypoint_agent.py`   | ObjectNav  | Waypoint     | Reads `goal_category`, random motion |
