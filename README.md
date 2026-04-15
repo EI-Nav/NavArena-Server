@@ -37,8 +37,8 @@ class MyAgent(NavigationModelServer):
 serve(MyAgent(), host="0.0.0.0", port=8000)
 ```
 
-See `examples/random_waypoint_agent.py` and `examples/random_velocity_agent.py`
-for complete working examples.
+See `examples/random_waypoint_agent.py`, `examples/random_velocity_agent.py`,
+and `examples/objectnav_waypoint_agent.py` for complete working examples.
 
 ## What This Package Provides
 
