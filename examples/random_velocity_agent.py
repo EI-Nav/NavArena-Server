@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""Reference WebSocket agent using navarena-server SDK.
+"""Random velocity agent — ``action_space: "velocity"``.
+
+Returns a random unicycle velocity command per decision step.
+The bench integrates it via Euler integration:
+``x = v * dt``, ``y = 0``, ``yaw = w * dt``.
+
+Pair with ``eval_settings.action_space: "velocity"`` in the bench config.
 
 Usage:
-    python examples/random_agent.py --port 8000
+    python examples/random_velocity_agent.py --port 8000
 """
 
 import argparse
@@ -11,12 +17,12 @@ import random
 from navarena_server.server import NavigationModelServer, serve
 
 
-class RandomNavigationAgent(NavigationModelServer):
+class RandomVelocityAgent(NavigationModelServer):
     async def predict(self, observation, ctx):
         return {
-            "x": random.uniform(-0.3, 0.5),
-            "y": random.uniform(-0.1, 0.1),
-            "yaw": random.uniform(-0.2, 0.2),
+            "v": random.uniform(-0.5, 1.0),
+            "w": random.uniform(-1.0, 1.0),
+            "dt": 0.1,
         }
 
     async def on_episode_start(self, task_info, ctx):
@@ -33,10 +39,12 @@ class RandomNavigationAgent(NavigationModelServer):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="NavArena random agent")
+    parser = argparse.ArgumentParser(
+        description="NavArena random velocity agent"
+    )
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
 
-    print(f"Starting random agent server on ws://{args.host}:{args.port}")
-    serve(RandomNavigationAgent(), host=args.host, port=args.port)
+    print(f"Starting random velocity agent on ws://{args.host}:{args.port}")
+    serve(RandomVelocityAgent(), host=args.host, port=args.port)
